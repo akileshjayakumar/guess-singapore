@@ -564,12 +564,12 @@ export function SGWordle() {
   }
 
   return (
-    <div className="h-full flex flex-col items-center p-2 sm:p-3 md:p-4 bg-gray-50 overflow-y-auto">
+    <div className="h-full flex flex-col items-center p-2 sm:p-3 md:p-4 bg-gray-50 overflow-y-auto pb-24">
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl flex flex-col h-full">
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-4 sm:mb-6"
+          className="flex items-center justify-between mb-2 sm:mb-4"
         >
           <button
             onClick={() => setCategory(null)}
@@ -614,7 +614,7 @@ export function SGWordle() {
           </div>
         ) : (
           <>
-            <div className={`mb-4 sm:mb-6 ${shake ? "animate-shake" : ""}`}>
+            <div className={`mb-2 sm:mb-4 ${shake ? "animate-shake" : ""}`}>
               {guesses.map((row, rowIndex) => (
                 <div key={rowIndex} className="flex justify-center gap-0.5 sm:gap-1 mb-1 sm:mb-1.5">
                   {row.map((tile, tileIndex) => {
