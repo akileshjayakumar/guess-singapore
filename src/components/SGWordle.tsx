@@ -420,14 +420,16 @@ export function SGWordle() {
 
   if (!playerChecked) {
     return (
-      <div className="min-h-full flex flex-col items-center justify-center bg-gray-50">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-          className="text-4xl"
-        >
-          🦁
-        </motion.div>
+      <div className="min-h-screen flex flex-col items-center p-2 sm:p-3 md:p-4 bg-gray-50">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl flex flex-col">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            className="text-4xl"
+          >
+            🦁
+          </motion.div>
+        </div>
       </div>
     );
   }
