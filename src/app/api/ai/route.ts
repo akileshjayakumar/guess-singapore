@@ -58,7 +58,7 @@ Keep it under 50 words total. Focus on what tourists would find interesting or u
         break;
 
       case "reaction":
-        systemPrompt = `You are a friendly Singapore companion. React briefly to game results. You can use light Singlish expressions but keep it clear for international players. Max 20 words.`;
+        systemPrompt = `You are a friendly companion. React briefly to game results. Use minimal Singlish (maximum one light expression like "lah"). Keep responses clear, short, and encouraging. Maximum 15 words.`;
         userPrompt = won
           ? `Player won! Guessed "${word}" in ${guessNumber} tries. Give a brief, warm celebration.`
           : `Player lost on "${word}". Give brief encouragement to try again.`;

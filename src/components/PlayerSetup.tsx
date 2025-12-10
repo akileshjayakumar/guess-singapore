@@ -98,7 +98,7 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
+        className="text-center mb-6"
       >
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-medium tracking-tight mb-2 text-gray-900">
           GuessSG

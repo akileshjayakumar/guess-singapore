@@ -837,9 +837,14 @@ export function SGWordle() {
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-blue-50 rounded-xl p-2 sm:p-3 mb-3 sm:mb-4 text-xs sm:text-sm text-blue-800"
+                        className="bg-blue-50 rounded-xl p-2 sm:p-3 mb-3 sm:mb-4 border border-blue-200"
                       >
-                        🦁 {aiReaction}
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-base">🦁</span>
+                        </div>
+                        <div className="prose prose-sm prose-blue max-w-none text-blue-800 [&>p]:mb-1 [&>p:last-child]:mb-0 [&_strong]:text-blue-950 text-xs sm:text-sm">
+                          <ReactMarkdown>{aiReaction}</ReactMarkdown>
+                        </div>
                       </motion.div>
                     )}
 
