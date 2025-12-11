@@ -21,7 +21,7 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
       setError("Please enter a nickname");
       return;
     }
-    
+
     if (nickname.length < 3) {
       setError("Nickname must be at least 3 characters");
       return;
@@ -43,10 +43,15 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
         .single();
 
       if (dbError) {
+        console.error("Database error:", dbError);
         if (dbError.code === "23505") {
           setError("This nickname is already taken. Try another!");
         } else {
-          setError("Something went wrong. Please try again.");
+          setError(
+            `Database error: ${
+              dbError.message || "Something went wrong. Please try again."
+            }`
+          );
         }
         return;
       }
@@ -76,7 +81,18 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
         .ilike("nickname", nickname.trim())
         .single();
 
-      if (dbError || !data) {
+      if (dbError) {
+        console.error("Database error:", dbError);
+        setError(
+          `Database error: ${
+            dbError.message ||
+            "Nickname not found. Check spelling or create a new profile."
+          }`
+        );
+        return;
+      }
+
+      if (!data) {
         setError("Nickname not found. Check spelling or create a new profile.");
         return;
       }
@@ -159,7 +175,9 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {isReturning ? "Enter your existing nickname" : "Create a profile to save your stats"}
+            {isReturning
+              ? "Enter your existing nickname"
+              : "Create a profile to save your stats"}
           </label>
           <input
             type="text"
@@ -168,7 +186,10 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
               setNickname(e.target.value);
               setError(null);
             }}
-            onKeyDown={(e) => e.key === "Enter" && (isReturning ? handleLoginExisting() : handleCreateProfile())}
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              (isReturning ? handleLoginExisting() : handleCreateProfile())
+            }
             placeholder={isReturning ? "Your nickname" : "Enter your nickname"}
             maxLength={15}
             className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-base"
@@ -189,7 +210,13 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
           disabled={loading}
           className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition-all disabled:opacity-50 mb-3"
         >
-          {loading ? (isReturning ? "Logging in..." : "Creating...") : (isReturning ? "Continue" : "Create Profile")}
+          {loading
+            ? isReturning
+              ? "Logging in..."
+              : "Creating..."
+            : isReturning
+            ? "Continue"
+            : "Create Profile"}
         </button>
 
         <div className="relative my-4">

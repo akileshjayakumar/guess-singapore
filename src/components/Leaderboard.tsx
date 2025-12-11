@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface LeaderboardEntry {
   nickname: string;
@@ -19,7 +24,11 @@ interface LeaderboardProps {
   currentPlayer?: string | null;
 }
 
-export function Leaderboard({ open, onOpenChange, currentPlayer }: LeaderboardProps) {
+export function Leaderboard({
+  open,
+  onOpenChange,
+  currentPlayer,
+}: LeaderboardProps) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<"wins" | "rate" | "games">("wins");
@@ -33,17 +42,33 @@ export function Leaderboard({ open, onOpenChange, currentPlayer }: LeaderboardPr
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      const { data: players } = await supabase.from("players").select("id, nickname");
-      
+      const { data: players, error: playersError } = await supabase
+        .from("players")
+        .select("id, nickname");
+
+      if (playersError) {
+        console.error("Error fetching players:", playersError);
+        setEntries([]);
+        setLoading(false);
+        return;
+      }
+
       if (!players || players.length === 0) {
         setEntries([]);
         setLoading(false);
         return;
       }
 
-      const { data: results } = await supabase
+      const { data: results, error: resultsError } = await supabase
         .from("game_results")
         .select("player_id, won, attempts");
+
+      if (resultsError) {
+        console.error("Error fetching game results:", resultsError);
+        setEntries([]);
+        setLoading(false);
+        return;
+      }
 
       if (!results) {
         setEntries([]);
@@ -51,10 +76,17 @@ export function Leaderboard({ open, onOpenChange, currentPlayer }: LeaderboardPr
         return;
       }
 
-      const statsMap = new Map<string, { played: number; won: number; totalAttempts: number }>();
-      
+      const statsMap = new Map<
+        string,
+        { played: number; won: number; totalAttempts: number }
+      >();
+
       results.forEach((result) => {
-        const current = statsMap.get(result.player_id) || { played: 0, won: 0, totalAttempts: 0 };
+        const current = statsMap.get(result.player_id) || {
+          played: 0,
+          won: 0,
+          totalAttempts: 0,
+        };
         current.played++;
         if (result.won) {
           current.won++;
@@ -65,13 +97,23 @@ export function Leaderboard({ open, onOpenChange, currentPlayer }: LeaderboardPr
 
       const leaderboard: LeaderboardEntry[] = players
         .map((player) => {
-          const stats = statsMap.get(player.id) || { played: 0, won: 0, totalAttempts: 0 };
+          const stats = statsMap.get(player.id) || {
+            played: 0,
+            won: 0,
+            totalAttempts: 0,
+          };
           return {
             nickname: player.nickname,
             games_played: stats.played,
             games_won: stats.won,
-            win_rate: stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0,
-            avg_attempts: stats.won > 0 ? Number((stats.totalAttempts / stats.won).toFixed(1)) : 0,
+            win_rate:
+              stats.played > 0
+                ? Math.round((stats.won / stats.played) * 100)
+                : 0,
+            avg_attempts:
+              stats.won > 0
+                ? Number((stats.totalAttempts / stats.won).toFixed(1))
+                : 0,
           };
         })
         .filter((entry) => entry.games_played > 0);
@@ -152,7 +194,9 @@ export function Leaderboard({ open, onOpenChange, currentPlayer }: LeaderboardPr
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                   className={`flex items-center gap-3 py-3 border-b border-gray-100 last:border-0 ${
-                    entry.nickname === currentPlayer ? "bg-emerald-50 -mx-3 px-3 rounded-lg" : ""
+                    entry.nickname === currentPlayer
+                      ? "bg-emerald-50 -mx-3 px-3 rounded-lg"
+                      : ""
                   }`}
                 >
                   <div className="w-8 text-center font-bold text-lg">
@@ -170,12 +214,16 @@ export function Leaderboard({ open, onOpenChange, currentPlayer }: LeaderboardPr
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-emerald-600">{entry.games_won}</div>
+                    <div className="font-bold text-emerald-600">
+                      {entry.games_won}
+                    </div>
                     <div className="text-xs text-gray-400">wins</div>
                   </div>
                   {entry.avg_attempts > 0 && (
                     <div className="text-right">
-                      <div className="font-medium text-gray-600">{entry.avg_attempts}</div>
+                      <div className="font-medium text-gray-600">
+                        {entry.avg_attempts}
+                      </div>
                       <div className="text-xs text-gray-400">avg</div>
                     </div>
                   )}
