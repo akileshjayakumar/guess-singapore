@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = "https://guesssg.vercel.app";
+const FALLBACK_SITE_URL = "https://gusss-singapore.vercel.app/";
 
 const sanitizeSiteUrl = (baseUrl: string): string => {
   try {
@@ -10,7 +10,7 @@ const sanitizeSiteUrl = (baseUrl: string): string => {
 };
 
 const siteUrl = sanitizeSiteUrl(
-  process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_SITE_URL,
+  process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_SITE_URL
 );
 
 export const seoConfig = {
@@ -86,4 +86,3 @@ export const buildJsonLd = () => {
     },
   ];
 };
-

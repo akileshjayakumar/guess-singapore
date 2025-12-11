@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      maxSnippet: -1,
-      maxImagePreview: "large",
-      maxVideoPreview: -1,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
     },
   },
   referrer: "origin-when-cross-origin",
@@ -77,12 +77,9 @@ export const metadata: Metadata = {
     images: [openGraphImage],
   },
   icons: {
-    icon: [
-      { url: "/orchids-logo.ico", sizes: "32x32", type: "image/x-icon" },
-      { url: "/orchids-logo.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/orchids-logo.png" }],
-    shortcut: ["/orchids-logo.ico"],
+    icon: [{ url: "/lion-favicon.png", sizes: "72x72", type: "image/png" }],
+    apple: [{ url: "/lion-favicon.png" }],
+    shortcut: ["/lion-favicon.png"],
   },
   manifest: "/manifest.webmanifest",
   verification: googleVerification
@@ -109,9 +106,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col`}
       >
-        <main className="flex-1">
-          {children}
-        </main>
+        <main className="flex-1">{children}</main>
         <Footer />
         <VisualEditsMessenger />
       </body>
