@@ -75,11 +75,11 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
     setError(null);
 
     try {
+      const trimmedNickname = nickname.trim();
       const { data, error: dbError } = await supabase
         .from("players")
         .select()
-        .ilike("nickname", nickname.trim())
-        .single();
+        .ilike("nickname", trimmedNickname);
 
       if (dbError) {
         console.error("Database error:", dbError);
@@ -92,14 +92,34 @@ export function PlayerSetup({ onComplete }: PlayerSetupProps) {
         return;
       }
 
-      if (!data) {
+      if (!data || data.length === 0) {
         setError("Nickname not found. Check spelling or create a new profile.");
         return;
       }
 
-      localStorage.setItem("sg-wordle-player", JSON.stringify(data));
-      onComplete(data);
-    } catch {
+      // Find exact case-insensitive match
+      const exactMatch = data.find(
+        (player) =>
+          player.nickname.toLowerCase() === trimmedNickname.toLowerCase()
+      );
+
+      if (!exactMatch) {
+        // If multiple matches but none exact, show error
+        if (data.length > 1) {
+          setError(
+            "Multiple players found with similar nickname. Please be more specific."
+          );
+          return;
+        }
+        // Shouldn't happen, but handle it
+        setError("Nickname not found. Check spelling or create a new profile.");
+        return;
+      }
+
+      localStorage.setItem("sg-wordle-player", JSON.stringify(exactMatch));
+      onComplete(exactMatch);
+    } catch (error) {
+      console.error("Login error:", error);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
